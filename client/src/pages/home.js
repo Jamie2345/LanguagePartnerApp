@@ -1,3 +1,5 @@
+import LandingNavbar from "../components/LandingNavbar";
+
 export default function Home() {
   return (
     <main data-theme="dracula">
@@ -25,7 +27,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="max-w-[600px]">
-                <img className="w-full h-auto" src="/images/diddy.png"></img>
+                <img className="w-full h-auto" src="/images/peopletalking.png"></img>
               </div>
             </div>
           </div>
@@ -48,7 +50,7 @@ export default function Home() {
               </div>
             </div>
             <div className="w-full flex flex-1 gap-4">
-              <div className="flex flex-1 py-8 px-4 rounded-3xl bg-gradient-to-b from-secondary to-secondary/75 shadow-lg flex-col items-center">
+              <div className="flex flex-1 py-8 px-4 rounded-3xl bg-primary flex-col items-center">
                 <div className="w-full text-left">
                   <h3 className="text-2xl font-semibold mb-4">
                     Meet new people and find the perfect language partner for
@@ -63,7 +65,7 @@ export default function Home() {
                 <div className="h-[200px] w-full mt-[50px]"></div>
               </div>
               <div className="flex flex-1 px-4 rounded-3xl flex-col gap-8">
-                <div className="py-8 px-4 rounded-3xl shadow-lg bg-gradient-to-b from-accent to-accent/75 flex flex-1">
+                <div className="py-8 px-4 rounded-3xl bg-secondary flex flex-1">
                   <div className="mr-4 w-56"></div>
                   <div>
                     <h3 className="text-2xl font-semibold mb-2">
@@ -76,7 +78,7 @@ export default function Home() {
                     </p>
                   </div>
                 </div>
-                <div className="py-8 px-4 rounded-3xl shadow-lg bg-gradient-to-b from-primary to-primary/75 flex flex-1">
+                <div className="py-8 px-4 rounded-3xl bg-accent flex flex-1">
                   <div>
                     <h3 className="text-2xl font-semibold mb-2">
                       Boost proficiency through practice
