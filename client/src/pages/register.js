@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-export default function Login() {
+export default function Register() {
   const [edittingUsername, setEdittingUsername] = useState(false);
   const [username, setUsername] = useState("");
 
@@ -13,10 +13,10 @@ export default function Login() {
         <div className="my-12 mx-6 w-full flex flex-col px-8 py-12 rounded-2xl shadow-xl bg-base-200 max-w-[800px]">
           <div className="py-4 border-b-[1px] border-primary/20 w-full text-left">
             <h2 className="text-4xl font-semibold text-base-content mb-2">
-              Welcome back!
+              Welcome!
             </h2>
             <p className="text-md text-base-content/80">
-              Sign into your account
+              Create an account
             </p>
           </div>
           <div className="grid gap-8 py-8 max-w-[500px] w-full">
@@ -66,7 +66,7 @@ export default function Login() {
                   : "bg-primary/20 text-base-content cursor-not-allowed"
               } p-3 max-w-24 text-sm font-semibold rounded-md shadow-sm`}
             >
-              Login
+              Sign Up
             </button>
           </div>
           <div className="w-full border-b-[1px] border-primary/20"></div>
@@ -76,25 +76,25 @@ export default function Login() {
             </p>
             <div>
               <a
-                href="/emaillogin"
+                href="/emailregister"
                 className="text-sm text-primary/50 hover:text-primary/80 mr-4"
               >
-                Login with Email
+                Register with Email
               </a>
               <a
                 href="#"
                 className="text-sm text-primary/50 hover:text-primary/80"
               >
-                Login with Google
+                Register with Google
               </a>
             </div>
           </div>
           <div className="w-full mt-8 flex items-center">
             <p className="text-sm text-base-content/80 mr-4">
-              Don't have an account?
+              Already have an account?
             </p>
-            <a href="/register" className="text-sm text-primary/90 hover:text-primary">
-              Sign up
+            <a href="/login" className="text-sm text-primary/90 hover:text-primary">
+              Login
             </a>
           </div>
         </div>
