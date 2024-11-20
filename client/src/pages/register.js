@@ -7,6 +7,12 @@ export default function Register() {
 
   const [edittingPassword, setEdittingPassword] = useState(false);
   const [password, setPassword] = useState("");
+
+  const handleSubmit = async () => {
+    "use server";
+    console.log(username, password);
+  };
+
   return (
     <main data-theme="light">
       <div className="flex w-full min-h-screen items-center justify-center bg-gradient-to-br from-primary to-secondary/30">
@@ -27,6 +33,8 @@ export default function Register() {
                 }`}
                 type="text"
                 placeholder="Enter username"
+                id="username"
+                name="username"
                 onFocus={() => setEdittingUsername(true)}
                 onBlur={() => setEdittingUsername(false)}
                 onChange={(e) => setUsername(e.target.value)}
@@ -46,6 +54,8 @@ export default function Register() {
                 }`}
                 type="password"
                 placeholder="Enter password"
+                id="password"
+                name="password"
                 onFocus={() => setEdittingPassword(true)}
                 onBlur={() => setEdittingPassword(false)}
                 onChange={(e) => setPassword(e.target.value)}
@@ -65,6 +75,7 @@ export default function Register() {
                   ? "bg-primary text-base-100 cursor-pointer"
                   : "bg-primary/20 text-base-content cursor-not-allowed"
               } p-3 max-w-24 text-sm font-semibold rounded-md shadow-sm`}
+              onClick={handleSubmit}
             >
               Sign Up
             </button>
