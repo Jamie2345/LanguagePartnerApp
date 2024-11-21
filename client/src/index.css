@@ -4,5 +4,5 @@
 
 
 input[type="radio"]:checked ~ .collapse-title {
-    color: oklch(var(--s));
+    color: oklch(var(--a));
 }

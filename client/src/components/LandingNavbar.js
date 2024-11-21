@@ -1,4 +1,4 @@
-import { CiLight } from "react-icons/ci";
+import ToggleTheme from "./ToggleTheme";
 
 export default function LandingNavbar() {
   return (
@@ -51,9 +51,7 @@ export default function LandingNavbar() {
           </li>
         </ul>
       </div>
-      <div className="navbar-end">
-        <a className="btn min-h-0 h-auto p-2"><CiLight className="h-6 w-6 text-base-content" /></a>
-      </div>
+      <ToggleTheme />
     </div>
   );
 }

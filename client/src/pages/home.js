@@ -34,7 +34,7 @@ export default function Home() {
         </div>
       </section>
       <section id="features">
-        <div className="flex flex-1 w-full items-center flex-col bg-cyan-900">
+        <div className="flex flex-1 w-full items-center flex-col bg-base-200">
           <div className="p-16 flex flex-col w-full max-w-[1000px]">
             <div className="flex items-center justify-between py-6 px-2">
               <div className="max-w-96 mr-4">
@@ -52,11 +52,11 @@ export default function Home() {
             <div className="w-full flex flex-1 gap-4">
               <div className="flex flex-1 py-8 px-4 rounded-3xl bg-primary flex-col items-center">
                 <div className="w-full text-left">
-                  <h3 className="text-2xl font-semibold mb-4">
+                  <h3 className="text-2xl text-primary-content font-semibold mb-4">
                     Meet new people and find the perfect language partner for
                     you
                   </h3>
-                  <p className="text-sm text-base-content/90">
+                  <p className="text-sm text-primary-content/90">
                     It's not just about finding language partners; it's about
                     creating meaningful connections with people who share the
                     same interests and goals as you.
@@ -68,10 +68,10 @@ export default function Home() {
                 <div className="py-8 px-4 rounded-3xl bg-secondary flex flex-1">
                   <div className="mr-4 w-56"></div>
                   <div>
-                    <h3 className="text-2xl font-semibold mb-2">
+                    <h3 className="text-2xl text-secondary-content font-semibold mb-2">
                       The world at your fingertips
                     </h3>
-                    <p className="text-sm text-base-content/90">
+                    <p className="text-sm text-secondary-content/90">
                       Take the whole world with you. anywhere, anytime, as you
                       connect with languages partners around the globe, breaking
                       down learning barriers.
@@ -80,10 +80,10 @@ export default function Home() {
                 </div>
                 <div className="py-8 px-4 rounded-3xl bg-accent flex flex-1">
                   <div>
-                    <h3 className="text-2xl font-semibold mb-2">
+                    <h3 className="text-2xl text-accent-content font-semibold mb-2">
                       Boost proficiency through practice
                     </h3>
-                    <p className="text-sm text-base-content/90">
+                    <p className="text-sm text-accent-content/90">
                       Practice speaking. writing, and listening with your
                       language partners to improve your language skills.
                     </p>
@@ -96,14 +96,16 @@ export default function Home() {
         </div>
       </section>
       <section id="cta1">
-        <div className="w-full flex items-center justify-center p-8 py-24 bg-secondary">
-          <div className="flex max-w-[1000px] w-full rounded-xl shadow-md bg-gradient-to-tl from-primary to-primary/75 px-8 py-16 items-center justify-between">
-            <div className="w-[50%] mr-8"></div>
+        <div className="w-full flex items-center justify-center p-8 py-24 bg-base-200">
+          <div className="flex max-w-[1000px] w-full rounded-xl shadow-md bg-gradient-to-tl from-primary to-primary/50 px-8 py-16 items-center justify-between">
+            <div className="w-[50%] mr-8">
+              <img src="/images/twopeopletalking.png" />
+            </div>
             <div className="grid gap-4">
-              <h2 className="text-3xl font-semibold">
+              <h2 className="text-3xl text-primary-content font-semibold">
                 Start your language learning journey today!
               </h2>
-              <p className="text-md text-base-content/80">
+              <p className="text-md text-primary-content/80">
                 Improve your language skills while making meaningful connections
                 with real people around the world.
               </p>
@@ -125,7 +127,7 @@ export default function Home() {
             <h2 className="text-3xl font-semibold mb-12">
               Frequently Asked Questions (FAQ)
             </h2>
-            <div className="collapse collapse-plus text-base-100 border-b-[1px] border-secondary border-opacity-30 p-2 rounded-none">
+            <div className="collapse collapse-plus text-base-100 border-b-[1px] border-info border-opacity-30 p-2 rounded-none">
               <input type="radio" name="my-accordion-3" />
               <div className="collapse-title text-xl font-semibold">
                 How does it work?
@@ -138,7 +140,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="collapse collapse-plus text-base-100 border-b-[1px] border-secondary border-opacity-30 p-2 rounded-none">
+            <div className="collapse collapse-plus text-base-100 border-b-[1px] border-info border-opacity-30 p-2 rounded-none">
               <input type="radio" name="my-accordion-3" />
               <div className="collapse-title text-xl font-semibold">
                 Is it free?
@@ -150,7 +152,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="collapse collapse-plus text-base-100 border-b-[1px] border-secondary border-opacity-30 p-2 rounded-none">
+            <div className="collapse collapse-plus text-base-100 border-b-[1px] border-info border-opacity-30 p-2 rounded-none">
               <input type="radio" name="my-accordion-3" />
               <div className="collapse-title text-xl font-semibold">
                 How can I join?
@@ -162,7 +164,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="collapse collapse-plus text-base-100 border-b-[1px] border-secondary border-opacity-30 p-2 rounded-none">
+            <div className="collapse collapse-plus text-base-100 border-b-[1px] border-info border-opacity-30 p-2 rounded-none">
               <input type="radio" name="my-accordion-3" />
               <div className="collapse-title text-xl font-semibold">
                 Can I learn any language?
@@ -176,7 +178,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="collapse collapse-plus text-base-100 border-b-[1px] border-secondary border-opacity-30 p-2 rounded-none">
+            <div className="collapse collapse-plus text-base-100 border-b-[1px] border-info border-opacity-30 p-2 rounded-none">
               <input type="radio" name="my-accordion-3" />
               <div className="collapse-title text-xl font-semibold">
                 Can I use it on mobile?
