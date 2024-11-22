@@ -21,7 +21,7 @@ export default function Home() {
                   <a href="/register" className="btn btn-primary">
                     Get Started
                   </a>
-                  <a href="/register" className="btn btn-secondary">
+                  <a href="/login" className="btn btn-secondary">
                     Login
                   </a>
                 </div>

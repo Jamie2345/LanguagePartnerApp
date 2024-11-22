@@ -9,8 +9,32 @@ export default function Register() {
   const [password, setPassword] = useState("");
 
   const handleSubmit = async () => {
-    "use server";
     console.log(username, password);
+    const jsonData = JSON.stringify({ username: username, password: password });
+    console.log(jsonData);
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: jsonData,
+    });
+    console.log(response);
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      window.location.href = "/login";
+    }
+    else if (response.status == 409) {
+      alert("This username is already in use. Please try another.");
+    }
+    else if (response.status == 400) {
+      alert("Please ensure you have completed both username and password fields.");
+    }
+    else {
+      alert("Unknown error please try again.");
+    }
   };
 
   return (
@@ -21,9 +45,7 @@ export default function Register() {
             <h2 className="text-4xl font-semibold text-base-content mb-2">
               Welcome!
             </h2>
-            <p className="text-md text-base-content/80">
-              Create an account
-            </p>
+            <p className="text-md text-base-content/80">Create an account</p>
           </div>
           <div className="grid gap-8 py-8 max-w-[500px] w-full">
             <div className="w-full max-w-[500px] relative duration-200 transition-all">
@@ -104,7 +126,10 @@ export default function Register() {
             <p className="text-sm text-base-content/80 mr-4">
               Already have an account?
             </p>
-            <a href="/login" className="text-sm text-primary/90 hover:text-primary">
+            <a
+              href="/login"
+              className="text-sm text-primary/90 hover:text-primary"
+            >
               Login
             </a>
           </div>

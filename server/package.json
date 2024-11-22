@@ -15,9 +15,12 @@
   "dependencies": {
     "@auth/express": "^0.8.4",
     "@auth/mongodb-adapter": "^3.7.4",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
     "dotenv": "^16.4.5",
     "express": "^4.20.0",
-    "mongodb": "^6.10.0"
+    "mongodb": "^6.10.0",
+    "mongoose": "^8.8.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"
