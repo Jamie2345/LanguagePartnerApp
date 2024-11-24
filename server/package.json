@@ -13,8 +13,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@auth/express": "^0.8.4",
-    "@auth/mongodb-adapter": "^3.7.4",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
     "cookie-parser": "^1.4.7",
