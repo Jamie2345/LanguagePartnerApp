@@ -8,23 +8,36 @@ export default function Login() {
   const [edittingPassword, setEdittingPassword] = useState(false);
   const [password, setPassword] = useState("");
 
-  const [csrfToken, setCsrfToken] = useState("");
+  const handleSubmit = async () => {
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    });
 
-  useEffect(() => {
-    fetch("/api/auth/csrf")
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error('Error fetching');
-      })
-      .then(data => {
-        setCsrfToken(data.csrfToken); 
-      })
-      .catch(error => {
-        console.error('err', error);
-      });
-  }, []);
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      if (data?.accessToken) {
+        //localStorage.setItem("accessToken", data.accessToken);
+        window.location.href = "/lengua";
+      }
+    } 
+    else if (response.status === 400) {
+      alert("please provide both username and password.");
+    }
+    else if (response.status === 401) {
+      alert("Invalid credentials");
+    }
+    else if (response.status === 404) {
+      alert("User not found");
+    }
+    else {
+      alert("an unexpected error occured");
+    }
+  };
 
   return (
     <main data-theme="light">
@@ -38,64 +51,63 @@ export default function Login() {
               Sign into your account
             </p>
           </div>
-          <form method="POST" action="/api/auth/callback/credentials">
-            <div className="grid gap-8 py-8 max-w-[500px] w-full">
-              <div className="w-full max-w-[500px] relative duration-200 transition-all">
-                <input type="hidden" name="csrfToken" value={csrfToken}></input>
-                <input
-                  className={`w-full p-3 text-sm bg-none bg-transparent border-[2px] border-base-300 rounded-md focus:outline-none outline-none focus:border-primary ${
-                    username.length > 0 && "border-primary"
-                  }`}
-                  type="text"
-                  placeholder="Enter username"
-                  name="username"
-                  label="Username"
-                  onFocus={() => setEdittingUsername(true)}
-                  onBlur={() => setEdittingUsername(false)}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-                <span
-                  className={`text-xs text-base-content/50 px-2 absolute bg-base-200 left-6 top-[-8px] ${
-                    edittingUsername ? "text-primary" : "text-base-content"
-                  }`}
-                >
-                  Username
-                </span>
-              </div>
-              <div className="w-full max-w-[500px] relative">
-                <input
-                  className={`w-full p-3 text-sm bg-none bg-transparent border-[2px] border-base-300 rounded-md focus:outline-none outline-none focus:border-primary ${
-                    password.length > 0 && "border-primary"
-                  }`}
-                  type="password"
-                  name="password"
-                  label="Password"
-                  placeholder="Enter password"
-                  onFocus={() => setEdittingPassword(true)}
-                  onBlur={() => setEdittingPassword(false)}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <span
-                  className={`text-xs text-base-content/50 px-2 absolute bg-base-200 left-6 top-[-8px] ${
-                    edittingPassword ? "text-primary" : "text-base-content"
-                  }`}
-                >
-                  Password
-                </span>
-              </div>
 
-              <button
-                className={`transition-all duration-200 ${
-                  username.length > 0 && password.length > 0
-                    ? "bg-primary text-base-100 cursor-pointer"
-                    : "bg-primary/20 text-base-content cursor-not-allowed"
-                } p-3 max-w-24 text-sm font-semibold rounded-md shadow-sm`}
-                type="submit"
+          <div className="grid gap-8 py-8 max-w-[500px] w-full">
+            <div className="w-full max-w-[500px] relative duration-200 transition-all">
+              <input
+                className={`w-full p-3 text-sm bg-none bg-transparent border-[2px] border-base-300 rounded-md focus:outline-none outline-none focus:border-primary ${
+                  username.length > 0 && "border-primary"
+                }`}
+                type="text"
+                placeholder="Enter username"
+                name="username"
+                label="Username"
+                onFocus={() => setEdittingUsername(true)}
+                onBlur={() => setEdittingUsername(false)}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <span
+                className={`text-xs text-base-content/50 px-2 absolute bg-base-200 left-6 top-[-8px] ${
+                  edittingUsername ? "text-primary" : "text-base-content"
+                }`}
               >
-                Login
-              </button>
+                Username
+              </span>
             </div>
-          </form>
+            <div className="w-full max-w-[500px] relative">
+              <input
+                className={`w-full p-3 text-sm bg-none bg-transparent border-[2px] border-base-300 rounded-md focus:outline-none outline-none focus:border-primary ${
+                  password.length > 0 && "border-primary"
+                }`}
+                type="password"
+                name="password"
+                label="Password"
+                placeholder="Enter password"
+                onFocus={() => setEdittingPassword(true)}
+                onBlur={() => setEdittingPassword(false)}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <span
+                className={`text-xs text-base-content/50 px-2 absolute bg-base-200 left-6 top-[-8px] ${
+                  edittingPassword ? "text-primary" : "text-base-content"
+                }`}
+              >
+                Password
+              </span>
+            </div>
+
+            <button
+              className={`transition-all duration-200 ${
+                username.length > 0 && password.length > 0
+                  ? "bg-primary text-base-100 cursor-pointer"
+                  : "bg-primary/20 text-base-content cursor-not-allowed"
+              } p-3 max-w-24 text-sm font-semibold rounded-md shadow-sm`}
+              onClick={handleSubmit}
+            >
+              Login
+            </button>
+          </div>
+
           <div className="w-full border-b-[1px] border-primary/20"></div>
           <div className="py-8 w-full flex flex-col border-b-[1px] border-primary/20">
             <p className="text-sm text-base-content/60 mb-2 mr-8">
