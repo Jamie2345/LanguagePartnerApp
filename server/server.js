@@ -2,12 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import bcrypt from "bcrypt";
 import mongoose from "mongoose";
-import saltHashPassword from "./utils/hashPassword.js";
 import { authenticateToken } from "./middleware/auth.middleware.js";
 
-import jwt from "jsonwebtoken";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -19,8 +17,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Connect to mongodb
-import User from "./models/User.js";
-import RefreshTokenDB from "./models/RefreshToken.js";
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
 const db = mongoose.connection;
 
@@ -33,134 +29,12 @@ app.listen(5000, () => {
 
 app.set("trust proxy", true);
 
-app.post("/api/auth/register", async (req, res) => {
-  console.log(req.body);
-  try {
-    if (req.body && req?.body.password && req?.body.username) {
-      const hashedPassword = await saltHashPassword(req.body.password);
-      console.log(hashedPassword);
-      console.log(typeof hashedPassword);
-      if (hashedPassword) {
-        const user = new User({
-          username: req.body.username,
-          password: hashedPassword,
-        });
-        user
-          .save()
-          .then((savedUser) => {
-            return res.json(savedUser);
-          })
-          .catch((error) => {
-            console.log(error);
-            if (error?.code === 11000) {
-              return res
-                .status(409)
-                .json({ error: "A user with this username already exists." });
-            }
-            return res
-              .status(400)
-              .json({ error: "an unexpected error occured" });
-          });
-      } else {
-        return res.status(400).json({ error: "an unexpected error occured" });
-      }
-    } else {
-      return res.status(400).json({
-        error: "Bad request, please provide both username and password.",
-      });
-    }
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: "Unexpected internal server error" });
-  }
-});
-
-app.post("/api/auth/login", async (req, res) => {
-  try {
-    const credentials = req.body;
-    if (credentials && credentials?.username && credentials?.password) {
-      console.log(credentials);
-      const user = await User.findOne({ username: credentials.username });
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
-      }
-      // compare the hashes
-      const isMatch = await bcrypt.compare(credentials.password, user.password);
-      console.log(isMatch);
-      if (!isMatch) {
-        return res.status(401).json({ error: "Invalid credentials" });
-      }
-
-      // if code reaches here then user has correct details
-      console.log(user);
-      const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: 30,
-      }); // setting expires in time for security.
-      const refreshToken = jwt.sign({ user }, process.env.REFRESH_TOKEN_SECRET);
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "Strict",
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-      });
-
-      // add refresh token to database.
-      const refreshTokenDB = new RefreshTokenDB({
-        refreshToken: refreshToken,
-      });
-      const savedRefreshToken = await refreshTokenDB.save();
-      console.log(savedRefreshToken);
-
-      return res.status(200).json({ accessToken });
-    }
-    return res.status(400).json({ error: "Bad request" });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: "Unexpected internal server error" });
-  }
-});
+app.use("/api/auth", authRoutes);
 
 app.get("/api/protected", authenticateToken, async (req, res) => {
   return res
     .status(200)
     .json({ message: "You are authenticated", user: req.user });
-});
-
-app.get("/api/auth/refresh", async (req, res) => {
-  console.log(req.cookies);
-  const refreshToken = req.cookies?.refreshToken;
-  if (!refreshToken) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  const foundRefreshToken = await RefreshTokenDB.findOne({refreshToken: refreshToken});
-
-  if (!foundRefreshToken) return res.status(401).json({ error: "Unauthorized" });
-
-  // if the refresh token is in the db generate new access token.
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, data) => {
-    if (err) return res.status(403).json({ error: "forbidden" });
-
-    const user = data.user;
-    const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: 30,
-    }); // setting expires in time for security.
-    return res.status(200).json({ accessToken });
-  });
-});
-
-app.delete("/api/auth/logout", async (req, res) => {
-  console.log(req.cookies);
-  const refreshToken = req.cookies?.refreshToken;
-  if (!refreshToken) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  const foundRefreshToken = await RefreshTokenDB.findOneAndDelete({refreshToken: refreshToken});
-
-  if (!foundRefreshToken) return res.status(401).json({ error: "Unauthorized" });
-
-  return res.status(200).json({ message: "Successfully logged out" });
 });
 
 app.get("*", (req, res) => {
