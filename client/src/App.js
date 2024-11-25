@@ -9,6 +9,7 @@ import EmailRegister from "./pages/emailregister";
 import EmailLogin from "./pages/emaillogin";
 import Home from "./pages/home";
 import Lengua from "./pages/lengua";
+import Onboarding from "./pages/onboarding";
 
 import AuthProvider from "./components/AuthProvider";
 
@@ -21,13 +22,20 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/emailregister" element={<EmailRegister />} />
         <Route path="/emaillogin" element={<EmailLogin />} />
-        
-        
+
         <Route
           path="/lengua"
           element={
             <AuthProvider>
               <Lengua />
+            </AuthProvider>
+          }
+        />
+        <Route
+          path="/onboarding"
+          element={
+            <AuthProvider>
+              <Onboarding />
             </AuthProvider>
           }
         />

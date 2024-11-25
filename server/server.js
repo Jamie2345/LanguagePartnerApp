@@ -31,10 +31,22 @@ app.set("trust proxy", true);
 
 app.use("/api/auth", authRoutes);
 
+// remove password from data before sending it back to client
+const sanitiseResponse = (data) => {
+  const sanitisedObj = {...data}
+  delete sanitisedObj.password;
+  return sanitisedObj
+}
+
 app.get("/api/protected", authenticateToken, async (req, res) => {
   return res
     .status(200)
     .json({ message: "You are authenticated", user: req.user });
+});
+
+app.get("/api/user", authenticateToken, async (req, res) => {
+  const user = sanitiseResponse(req.user);
+  return res.status(200).json({user: user});
 });
 
 app.get("*", (req, res) => {
