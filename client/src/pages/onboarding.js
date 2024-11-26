@@ -9,11 +9,23 @@ import { MdDelete } from "react-icons/md";
 import "../css/onboarding.css";
 
 export default function Onboarding() {
-  const [selected, setSelected] = useState("");
+  const [nationality, setNationality] = useState("");
+  const [languages, setLanguages] = useState([]);
+  const [interests, setInterests] = useState();
+
+  async function handleSubmit() {
+    const data = {
+      nationality,
+      languages,
+      interests,
+    };
+
+    console.log(data);
+  }
 
   return (
     <main data-theme="light">
-      <div className="w-full h-screen flex items-center justify-center bg-base-200">
+      <div className="w-full min-h-screen h-full flex items-center justify-center bg-base-200">
         <div className="flex flex-col py-12 px-8 m-8 rounded-2xl shadow-2xl items-center bg-gradient-to-br from-primary to-primary/50 shadow-base-300 w-full max-w-[730px]">
           <div className="flex text-center flex-col mb-12">
             <h1 className="text-4xl font-bold text-primary-content">
@@ -30,8 +42,8 @@ export default function Onboarding() {
                 className="text-base-content"
                 selectButtonClassName="country-btn"
                 searchable={true}
-                selected={selected}
-                onSelect={(code) => setSelected(code)}
+                selected={nationality}
+                onSelect={(code) => setNationality(code)}
               />
             </div>
             <div className="w-full flex-col">
@@ -41,56 +53,81 @@ export default function Onboarding() {
               </p>
               <div className="flex flex-col items-start pt-2">
                 <div className="flex flex-col">
-                  <div className="mb-2 flex items-center">
-                    <div className="min-w-48 mr-6">
-                      <Select
-                        className="basic-single"
-                        classNamePrefix="select"
-                        placeholder="Select Language"
-                        isSearchable={true}
-                        name="language"
-                        options={LanguageOptions}
-                      />
-                    </div>
-                    <div className="min-w-64 mr-6">
-                      <Select
-                        className="basic-single"
-                        classNamePrefix="select"
-                        defaultValue={ProficiencyOptions[0]}
-                        name="language"
-                        options={ProficiencyOptions}
-                      />
-                    </div>
-                    <button className="p-1">
-                      <MdDelete className="text-accent h-8 w-8" />
-                    </button>
-                  </div>
-                  <div className="mb-2 flex items-center">
-                    <div className="min-w-48 mr-6">
-                      <Select
-                        className="basic-single"
-                        classNamePrefix="select"
-                        placeholder="Select Language"
-                        isSearchable={true}
-                        name="language"
-                        options={LanguageOptions}
-                      />
-                    </div>
-                    <div className="min-w-64 mr-6">
-                      <Select
-                        className="basic-single"
-                        classNamePrefix="select"
-                        defaultValue={ProficiencyOptions[0]}
-                        name="language"
-                        options={ProficiencyOptions}
-                      />
-                    </div>
-                    <button className="p-1">
-                      <MdDelete className="text-accent h-8 w-8" />
-                    </button>
-                  </div>
+                  {languages.map((language, index) => {
+                    return (
+                      <div className="mb-2 flex items-center" key={index}>
+                        <div className="min-w-48 mr-6">
+                          <Select
+                            className="basic-single"
+                            classNamePrefix="select"
+                            placeholder="Select Language"
+                            isSearchable={true}
+                            name="language"
+                            options={LanguageOptions}
+                            onChange={(selectedOption) => {
+                              setLanguages((prevLanguages) =>
+                                prevLanguages.map(
+                                  (lang, idx) =>
+                                    idx === index // Check if the current index matches the selected index
+                                      ? {
+                                          ...lang,
+                                          language: selectedOption,
+                                        } // Update the `language` property
+                                      : lang // Return the unmodified language
+                                )
+                              );
+                            }}
+                          />
+                        </div>
+                        <div className="min-w-64 mr-6">
+                          <Select
+                            className="basic-single"
+                            classNamePrefix="select"
+                            defaultValue={ProficiencyOptions[0]}
+                            name="language"
+                            options={ProficiencyOptions}
+                            onChange={(selectedOption) => {
+                              setLanguages((prevLanguages) =>
+                                prevLanguages.map((lang, idx) =>
+                                  idx === index
+                                    ? {
+                                        ...lang,
+                                        proficiency: selectedOption,
+                                      }
+                                    : lang
+                                )
+                              );
+                            }}
+                          />
+                        </div>
+                        <button className="p-1">
+                          <MdDelete
+                            className="text-accent h-8 w-8"
+                            onClick={() => {
+                              setLanguages((prevLanguages) =>
+                                prevLanguages.filter((_, idx) => idx !== index)
+                              );
+                            }}
+                          />
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
-                <button className="btn btn-secondary btn-sm shadow-md">
+                <button
+                  className="btn btn-secondary btn-sm shadow-md"
+                  onClick={() => {
+                    const newLanguage = {
+                      language: "",
+                      proficiency: ProficiencyOptions[0],
+                    };
+                    setLanguages((prevLanguages) => [
+                      ...prevLanguages,
+                      newLanguage,
+                    ]);
+                    console.log(languages);
+                  }}
+                >
                   Add Language
                 </button>
               </div>
@@ -105,9 +142,24 @@ export default function Onboarding() {
                   placeholder="Select Interests / Hobbies"
                   isMulti
                   options={interestOptions}
+                  onChange={(interests) => {
+                    console.log(interests);
+                    setInterests(interests);
+                  }}
                 />
               </div>
             </div>
+          </div>
+          <div className="w-full mt-8 flex-col">
+            <p className="text-primary-content font-semibold mb-2">
+              Finished the form?
+            </p>
+            <button
+              className="btn btn-md w-full shadow-md bg-gradient-to-br from-secondary to-secondary/50 border-primary text-secondary-content"
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
           </div>
         </div>
       </div>
