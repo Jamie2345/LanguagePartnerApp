@@ -11,13 +11,15 @@ export default function Lengua() {
       try {
         const response = await axiosInstance.get("/api/user");
         const user = response.data?.user;
-        console.log(user);
-        if (user && user.interests && user.nationality) {
-          setValidUser(true);
+
+        if (user && user?.nationality && user?.languages.length > 1) {
+          setValidUser(true); // true as the data is valid!
         } else {
+          console.log('fail');
           setValidUser(false);
         }
       } catch (error) {
+        console.log(error);
         setValidUser(false);
       } finally {
         setLoading(false);

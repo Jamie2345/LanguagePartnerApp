@@ -6,6 +6,8 @@ import ProficiencyOptions from "../data/proficiencies";
 import interestOptions from "../data/interests";
 import { MdDelete } from "react-icons/md";
 
+import axiosInstance from "../api/axiosInstance";
+
 import "../css/onboarding.css";
 
 export default function Onboarding() {
@@ -20,7 +22,46 @@ export default function Onboarding() {
       interests,
     };
 
-    console.log(data);
+    try {
+      if (data?.nationality && data?.languages.length > 1) {
+        let formValid = true;
+        // make sure that all languages have a proficiency and language selected
+        languages.forEach((language) => {
+          if (language.language === "") {
+            alert("Please select a language for each language field.");
+            formValid = false;
+          }
+          else if (language.proficiency === "") {
+            alert("Please select a proficiency for each language field.");
+            formValid = false;
+          }
+        });
+        
+        if (!formValid) return;
+
+        // if code reaches here then form valid
+        const response = await axiosInstance.put("/api/onboarding", data, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+    
+        if (response.status === 200) {
+          window.location.href = "/lengua";
+        } else {
+          alert(response.data.message);
+        }
+      }
+      else if (!data?.nationality) {
+        alert("Please enter your nationality.");
+      }
+      else {
+        alert("Please enter your native language and at least one other language you want to learn.");
+      }
+    }
+    catch (err) {
+      alert("An unexpected error occured please try again.");
+    }
   }
 
   return (

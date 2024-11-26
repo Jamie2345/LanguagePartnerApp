@@ -65,7 +65,7 @@ export const login = async (req, res) => {
       // if code reaches here then user has correct details
       console.log(user);
       const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: 30,
+        expiresIn: 600, // 10 minutes
       }); // setting expires in time for security.
       const refreshToken = jwt.sign({ user }, process.env.REFRESH_TOKEN_SECRET);
       res.cookie("refreshToken", refreshToken, {
@@ -108,7 +108,7 @@ export const refresh = async (req, res) => {
 
     const user = data.user;
     const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: 30,
+      expiresIn: 600, // 10 minutes
     }); // setting expires in time for security.
     return res.status(200).json({ accessToken });
   });
