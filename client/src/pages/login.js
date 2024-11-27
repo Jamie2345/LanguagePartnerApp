@@ -62,6 +62,7 @@ export default function Login() {
                 placeholder="Enter username"
                 name="username"
                 label="Username"
+                autoComplete="off"
                 onFocus={() => setEdittingUsername(true)}
                 onBlur={() => setEdittingUsername(false)}
                 onChange={(e) => setUsername(e.target.value)}

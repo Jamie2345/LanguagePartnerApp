@@ -57,6 +57,7 @@ export default function Register() {
                 placeholder="Enter username"
                 id="username"
                 name="username"
+                autoComplete="off"
                 onFocus={() => setEdittingUsername(true)}
                 onBlur={() => setEdittingUsername(false)}
                 onChange={(e) => setUsername(e.target.value)}
