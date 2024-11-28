@@ -1,4 +1,4 @@
-import express from "express";
+import express, { request } from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -7,6 +7,7 @@ import { authenticateToken } from "./middleware/auth.middleware.js";
 
 import authRoutes from "./routes/authRoutes.js";
 import User from "./models/User.js";
+import Conversation from "./models/Conversation.js";
 
 import interestOptions from "./dataOptions/interests.js";
 import LanguageOptions from "./dataOptions/countries.js";
@@ -115,7 +116,7 @@ app.put("/api/onboarding", authenticateToken, async (req, res) => {
             "Please select between 2 and 10 languages (one should be your native languages and the others should be languages you are learning).",
         });
       }
-      
+
       function removeDuplicates(array) {
         const uniqueArray = Array.from(
           new Set(array.map((item) => JSON.stringify(item)))
@@ -220,6 +221,140 @@ app.get("/api/search", authenticateToken, async (req, res) => {
     return res.status(200).json(users);
   } catch (error) {
     console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+function isValidRequestor(requestingUser) {  // function to make sure the req.user has onboarded first
+  return (
+    requestingUser?.languages &&
+    requestingUser?.languages.length > 1 && 
+    requestingUser?.nationality
+  );
+}
+
+app.post("/api/conversation", authenticateToken, async (req, res) => {
+  try {
+    if (!isValidRequestor(req.user)) {
+      return res.status(400).json({
+        message: "Please complete your profile before starting a conversation",
+      });
+    }
+
+    const { recipientId } = req.body;
+    if (!recipientId) {
+      return res.status(400).json({ message: "Please provide recipientId" });
+    }
+
+    // check this user is valid before starting a conversation.
+    const foundRecipient = await User.findById(recipientId);
+    if (!foundRecipient) {
+      return res.status(404).json({ message: "Recipient not found" });
+    }
+
+    // make sure they are messaging a valid account
+    if (!isValidRequestor(foundRecipient)) {
+      return res.status(400).json({
+        message: "Recipient has not completed their profile yet",
+      });
+    }
+
+    if (req.user._id.toString() === recipientId) {
+      return res.status(400).json({
+        message: "You cannot start a conversation with yourself",
+      });
+    }
+
+    const existingConversation = await Conversation.findOne({
+      users: { $all: [req.user._id, recipientId] },
+    });
+    if (existingConversation) {
+      return res.status(400).json({ message: "Conversation already exists" });
+    }
+
+    // if code gets to here then everything is valid
+    const conversation = new Conversation({
+      users: [req.user._id, recipientId],
+    });
+    
+    const savedConversation = await conversation.save();
+    if (!savedConversation) {
+      return res.status(500).json({ message: "An unexpected error occured" });
+    }
+    return res.status(200).json(savedConversation);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+app.put("/api/message", authenticateToken, async (req, res) => {
+  try {
+    const { conversationId, message } = req.body;
+    if (!conversationId || !message) {
+      return res.status(400).json({ message: "Please provide conversationId and message" });
+    }
+
+    const conversation = await Conversation.findById(conversationId);
+    if (!conversation) {
+      return res.status(404).json({ message: "Conversation not found" });
+    }
+
+    if (!conversation.users.includes(req.user._id)) {
+      return res.status(401).json({ message: "Unauthorised" });
+    }
+
+    const newMessage = {
+      from: req.user._id,
+      to: conversation.users.find((id) => id.toString() !== req.user._id.toString()),  // finds the other user who isn't the req.user
+      content: message,
+    };
+
+    conversation.messages.push(newMessage);
+    const savedConversation = await conversation.save();
+    if (!savedConversation) {
+      return res.status(500).json({ message: "An unexpected error occured" });
+    }
+    return res.status(200).json(savedConversation);
+
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+app.get("/api/conversation", authenticateToken, async (req, res) => {
+  try {
+    const {conversationId} = req.query;
+    if (!conversationId) {
+      return res.status(400).json({ message: "Please provide conversationId" });
+    }
+
+    const conversation = await Conversation.findById(conversationId);
+    if (!conversation) {
+      return res.status(404).json({ message: "Conversation not found" });
+    }
+
+    if (!conversation.users.includes(req.user._id)) {
+      return res.status(401).json({ message: "Unauthorised" });
+    }
+
+    return res.status(200).json(conversation);
+  }
+  catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+app.get("/api/conversations", authenticateToken, async (req, res) => {
+  try {
+    const conversations = await Conversation.find({ users: req.user._id });
+    return res.status(200).json(conversations);
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "Server Error" });
   }
 });
