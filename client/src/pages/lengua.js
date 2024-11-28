@@ -14,6 +14,12 @@ export default function Lengua() {
   const [validUser, setValidUser] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const [language, setLanguage] = useState("");
+  const [proficiency, setProficiency] = useState("");
+  const [interests, setInterests] = useState();
+
+  const [searchUsers, setSearchUsers] = useState([]);
+
   useEffect(() => {
     const fetchProtected = async () => {
       try {
@@ -48,7 +54,11 @@ export default function Lengua() {
           window.innerHeight - filterInputHeight - 240;
         setContentHeight(`${contentResponsiveHeight}px`);
 
-        console.log(filterInputHeight, contentResponsiveHeight, window.innerHeight);
+        console.log(
+          filterInputHeight,
+          contentResponsiveHeight,
+          window.innerHeight
+        );
       } catch (error) {
         console.log(error);
       }
@@ -62,6 +72,33 @@ export default function Lengua() {
       window.removeEventListener("resize", adjustHeight);
     };
   }, [filterInputRef, validUser, loading]);
+
+  async function searchForUsers() {
+    const interestsString = interests ? interests.join(",") : "";
+    const url = (language && proficiency) ? `/api/search?language=${language}&proficiency=${proficiency}&interests=${interestsString}` : "/api/search";
+
+    try {
+      const response = await axiosInstance.get(url);
+      const data = response.data;
+
+      if (data) {
+        setSearchUsers(data);
+      } else {
+        alert("No users found with the given criteria.");
+      }
+    } catch (err) {
+      if (err.response.status === 400) {
+        alert("Please provide both language and proficiency");
+      }
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    if (validUser) {
+      searchForUsers();
+    }
+  }, [validUser]);
 
   if (loading) return;
   else if (validUser) {
@@ -87,6 +124,7 @@ export default function Lengua() {
                       isSearchable={true}
                       name="language"
                       options={LanguageOptions}
+                      onChange={(e) => setLanguage(e.value)}
                     />
                   </div>
                   <div className="min-w-64 mr-3">
@@ -96,6 +134,7 @@ export default function Lengua() {
                       placeholder="Select Proficiency"
                       name="language"
                       options={ProficiencyOptions}
+                      onChange={(e) => setProficiency(e.value)}
                     />
                   </div>
                   <div className="min-w-64 w-full">
@@ -104,10 +143,14 @@ export default function Lengua() {
                       placeholder="Select Interests / Hobbies"
                       isMulti
                       options={interestOptions}
+                      onChange={(e) => setInterests(e.map((i) => i.value))}
                     />
                   </div>
                 </div>
-                <button className="btn btn-md w-full shadow-md bg-gradient-to-br from-primary to-primary/50 text-primary-content">
+                <button
+                  className="btn btn-md w-full shadow-md bg-gradient-to-br from-primary to-primary/50 text-primary-content"
+                  onClick={searchForUsers}
+                >
                   Search
                 </button>
               </div>
@@ -117,246 +160,51 @@ export default function Lengua() {
               className="grid gap-2 overflow-auto w-full"
               style={{ maxHeight: contentHeight }}
             >
-              <div className="py-12 px-8 border-[1px] border-secondary rounded-xl shadow-xl flex items-center">
-                <div className="mr-12">
-                  <img
-                    src="/images/defaultuser.jpg"
-                    alt="user"
-                    className="w-32 h-auto"
-                  />
-                </div>
-                <div className="w-full flex flex-col">
-                  <div className="flex">
-                    <h2 className="text-2xl font-semibold mr-4">John Doe</h2>
-                    <ReactCountryFlag
-                      countryCode="US"
-                      svg
-                      style={{
-                        width: "2em",
-                        height: "auto",
-                      }}
-                      title="US"
-                    />
-                  </div>
-                  <div className="flex mt-2 max-w-full flex-wrap gap-y-2">
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4">
-                      English: C2
+              {searchUsers.map((searchedUser) => {
+                return (
+                  <div className="py-12 px-8 border-[1px] border-secondary rounded-xl shadow-xl flex items-center">
+                    <div className="mr-12">
+                      <img
+                        src="/images/defaultuser.jpg"
+                        alt="user"
+                        className="w-32 h-auto"
+                      />
                     </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4">
-                      Spanish: B2
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4">
-                      French: A2
-                    </div>
-                  </div>
-                  <div className="flex mt-2 max-w-full flex-wrap gap-y-2">
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Programming
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Basketball
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Football
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Engineering
+                    <div
+                      className="w-full flex flex-col"
+                      key={searchedUser?._id}
+                    >
+                      <div className="flex">
+                        <h2 className="text-2xl font-semibold mr-4">
+                          {searchedUser?.username}
+                        </h2>
+                        <ReactCountryFlag
+                          countryCode={searchedUser?.nationality}
+                          svg
+                          style={{
+                            width: "2em",
+                            height: "auto",
+                          }}
+                          title={searchedUser?.nationality}
+                        />
+                      </div>
+                      <div className="flex mt-2 max-w-full flex-wrap gap-y-2">
+                        {searchedUser?.languages.map((lang, index) => {
+                          return (
+                            <div
+                              className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4"
+                              key={index}
+                            >
+                              {lang?.language?.label} :{" "}
+                              {lang?.proficiency?.label}
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div className="py-12 px-8 border-[1px] border-secondary rounded-xl shadow-xl flex items-center">
-                <div className="mr-12">
-                  <img
-                    src="/images/defaultuser.jpg"
-                    alt="user"
-                    className="w-32 h-auto"
-                  />
-                </div>
-                <div className="w-full flex flex-col">
-                  <div className="flex">
-                    <h2 className="text-2xl font-semibold mr-4">John Doe</h2>
-                    <ReactCountryFlag
-                      countryCode="US"
-                      svg
-                      style={{
-                        width: "2em",
-                        height: "auto",
-                      }}
-                      title="US"
-                    />
-                  </div>
-                  <div className="flex mt-2 max-w-full flex-wrap gap-y-2">
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4">
-                      English: C2
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4">
-                      Spanish: B2
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4">
-                      French: A2
-                    </div>
-                  </div>
-                  <div className="flex mt-2 max-w-full flex-wrap gap-y-2">
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Programming
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Basketball
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Football
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Engineering
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="py-12 px-8 border-[1px] border-secondary rounded-xl shadow-xl flex items-center">
-                <div className="mr-12">
-                  <img
-                    src="/images/defaultuser.jpg"
-                    alt="user"
-                    className="w-32 h-auto"
-                  />
-                </div>
-                <div className="w-full flex flex-col">
-                  <div className="flex">
-                    <h2 className="text-2xl font-semibold mr-4">John Doe</h2>
-                    <ReactCountryFlag
-                      countryCode="US"
-                      svg
-                      style={{
-                        width: "2em",
-                        height: "auto",
-                      }}
-                      title="US"
-                    />
-                  </div>
-                  <div className="flex mt-2 max-w-full flex-wrap gap-y-2">
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4">
-                      English: C2
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4">
-                      Spanish: B2
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4">
-                      French: A2
-                    </div>
-                  </div>
-                  <div className="flex mt-2 max-w-full flex-wrap gap-y-2">
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Programming
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Basketball
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Football
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Engineering
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="py-12 px-8 border-[1px] border-secondary rounded-xl shadow-xl flex items-center">
-                <div className="mr-12">
-                  <img
-                    src="/images/defaultuser.jpg"
-                    alt="user"
-                    className="w-32 h-auto"
-                  />
-                </div>
-                <div className="w-full flex flex-col">
-                  <div className="flex">
-                    <h2 className="text-2xl font-semibold mr-4">John Doe</h2>
-                    <ReactCountryFlag
-                      countryCode="US"
-                      svg
-                      style={{
-                        width: "2em",
-                        height: "auto",
-                      }}
-                      title="US"
-                    />
-                  </div>
-                  <div className="flex mt-2 max-w-full flex-wrap gap-y-2">
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4">
-                      English: C2
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4">
-                      Spanish: B2
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4">
-                      French: A2
-                    </div>
-                  </div>
-                  <div className="flex mt-2 max-w-full flex-wrap gap-y-2">
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Programming
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Basketball
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Football
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Engineering
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="py-12 px-8 border-[1px] border-secondary rounded-xl shadow-xl flex items-center">
-                <div className="mr-12">
-                  <img
-                    src="/images/defaultuser.jpg"
-                    alt="user"
-                    className="w-32 h-auto"
-                  />
-                </div>
-                <div className="w-full flex flex-col">
-                  <div className="flex">
-                    <h2 className="text-2xl font-semibold mr-4">John Doe</h2>
-                    <ReactCountryFlag
-                      countryCode="US"
-                      svg
-                      style={{
-                        width: "2em",
-                        height: "auto",
-                      }}
-                      title="US"
-                    />
-                  </div>
-                  <div className="flex mt-2 max-w-full flex-wrap gap-y-2">
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4">
-                      English: C2
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4">
-                      Spanish: B2
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-primary rounded-md text-primary-content text-sm font-semibold mr-4">
-                      French: A2
-                    </div>
-                  </div>
-                  <div className="flex mt-2 max-w-full flex-wrap gap-y-2">
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Programming
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Basketball
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Football
-                    </div>
-                    <div className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4">
-                      Engineering
-                    </div>
-                  </div>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </div>
         </div>
