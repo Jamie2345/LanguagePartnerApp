@@ -8,6 +8,10 @@ import { authenticateToken } from "./middleware/auth.middleware.js";
 import authRoutes from "./routes/authRoutes.js";
 import User from "./models/User.js";
 
+import interestOptions from "./dataOptions/interests.js";
+import LanguageOptions from "./dataOptions/countries.js";
+import ProficiencyOptions from "./dataOptions/proficiencies.js";
+
 dotenv.config();
 
 const app = express();
@@ -57,10 +61,96 @@ app.put("/api/onboarding", authenticateToken, async (req, res) => {
     const user = req.user;
     const data = req.body;
 
+    function objectsAreEqual(obj1, obj2) {
+      return JSON.stringify(obj1) === JSON.stringify(obj2);
+    }
+
+    function isLanguagesValid(languages) {
+      for (let i = 0; i < languages.length; i++) {
+        const language = languages[i].language;
+        const proficiency = languages[i].proficiency;
+
+        const languageExists = LanguageOptions.some((option) =>
+          objectsAreEqual(option, language)
+        );
+
+        const proficiencyExists = ProficiencyOptions.some((option) =>
+          objectsAreEqual(option, proficiency)
+        );
+
+        console.log(language);
+        console.log("LanguageOptions", LanguageOptions);
+        console.log("ProficiencyOptions", ProficiencyOptions);
+
+        if (!languageExists || !proficiencyExists) {
+          console.log("Invalid language or proficiency");
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function isInterestsValid(interests) {
+      for (let i = 0; i < interests.length; i++) {
+        const interest = interests[i];
+
+        const interestExists = interestOptions.some((option) =>
+          objectsAreEqual(option, interest)
+        );
+
+        if (!interestExists) {
+          console.log("Invalid interest:", interest);
+          return false;
+        }
+      }
+
+      return true;
+    }
+
     if (data?.nationality && data?.languages) {
+      // validate langauges
+      if (data.languages.length < 2 || data.languages.length > 10) {
+        return res.status(400).json({
+          message:
+            "Please select between 2 and 10 languages (one should be your native languages and the others should be languages you are learning).",
+        });
+      }
+      
+      function removeDuplicates(array) {
+        const uniqueArray = Array.from(
+          new Set(array.map((item) => JSON.stringify(item)))
+        );
+        return uniqueArray.map((item) => JSON.parse(item));
+      }
+
+      const languages = removeDuplicates(data.languages);
+      console.log(languages);
+
+      if (!isLanguagesValid(languages))
+        return res
+          .status(400)
+          .json({ message: "Invalid language or proficiency" });
+
+      // validate interests
+      if (data?.interests) {
+        if (data.interests.length > 10)
+          return res
+            .status(400)
+            .json({ message: "Please select a maximum of 10 interests." });
+        if (!isInterestsValid(data.interests))
+          return res.status(400).json({ message: "Invalid interests" });
+      }
+
+      // validate nationality
+      if (data.nationality.length !== 2) {
+        return res.status(400).json({
+          message: "Please provide a valid 2 letter nationality code",
+        });
+      }
+
       const dataToUpdate = {
         nationality: data.nationality,
-        languages: data.languages,
+        languages: languages,
       };
       if (data.interests) dataToUpdate.interests = data.interests;
 
@@ -93,7 +183,7 @@ app.get("/api/search", authenticateToken, async (req, res) => {
     console.log(language, proficiency, interests);
     const query = {};
 
-    query['username'] = { $ne: req.user.username }; // dont include the user in their own search for others.
+    query["username"] = { $ne: req.user.username }; // dont include the user in their own search for others.
 
     if (language && proficiency) {
       query["languages"] = {

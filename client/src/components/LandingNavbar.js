@@ -51,7 +51,9 @@ export default function LandingNavbar() {
           </li>
         </ul>
       </div>
-      <ToggleTheme />
+      <div className="navbar-end">
+        <ToggleTheme />
+      </div>
     </div>
   );
 }

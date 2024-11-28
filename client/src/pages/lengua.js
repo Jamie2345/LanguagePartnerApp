@@ -10,37 +10,20 @@ import Select from "react-select";
 
 import ReactCountryFlag from "react-country-flag";
 
+import useUserData from "../hooks/useUserData";
+
+import BottomNavbar from "../components/BottomNavbar";
+
+import ToggleThemeTopRight from "../components/ToggleThemeTopRight";
+
 export default function Lengua() {
-  const [validUser, setValidUser] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const { validUser, loading } = useUserData();
 
   const [language, setLanguage] = useState("");
   const [proficiency, setProficiency] = useState("");
   const [interests, setInterests] = useState();
 
   const [searchUsers, setSearchUsers] = useState([]);
-
-  useEffect(() => {
-    const fetchProtected = async () => {
-      try {
-        const response = await axiosInstance.get("/api/user");
-        const user = response.data?.user;
-
-        if (user && user?.nationality && user?.languages.length > 1) {
-          setValidUser(true); // true as the data is valid!
-        } else {
-          console.log("fail");
-          setValidUser(false);
-        }
-      } catch (error) {
-        console.log(error);
-        setValidUser(false);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProtected();
-  }, []);
 
   // code to resize the results container so it doesn't overflow page.
   const [contentHeight, setContentHeight] = useState("0px");
@@ -75,7 +58,10 @@ export default function Lengua() {
 
   async function searchForUsers() {
     const interestsString = interests ? interests.join(",") : "";
-    const url = (language && proficiency) ? `/api/search?language=${language}&proficiency=${proficiency}&interests=${interestsString}` : "/api/search";
+    const url =
+      language && proficiency
+        ? `/api/search?language=${language}&proficiency=${proficiency}&interests=${interestsString}`
+        : "/api/search";
 
     try {
       const response = await axiosInstance.get(url);
@@ -83,6 +69,9 @@ export default function Lengua() {
 
       if (data) {
         setSearchUsers(data);
+        if (data.length === 0) {
+          alert("No users found with the given criteria.");
+        }
       } else {
         alert("No users found with the given criteria.");
       }
@@ -104,6 +93,7 @@ export default function Lengua() {
   else if (validUser) {
     return (
       <main data-theme="light">
+        <ToggleThemeTopRight />
         <div className="w-full min-h-screen flex justify-center">
           <div className="flex flex-col m-20 w-full max-w-[1200px] items-center flex-1">
             <div className="w-full mb-4">
@@ -201,11 +191,24 @@ export default function Lengua() {
                           );
                         })}
                       </div>
+                      <div className="flex mt-2 max-w-full flex-wrap gap-y-2">
+                        {searchedUser?.interests.map((interest, index) => {
+                          return (
+                            <div
+                              className="py-1 px-2 border-base-content border-[1px] bg-accent rounded-md text-accent-content text-sm font-semibold mr-4"
+                              key={index}
+                            >
+                              {interest?.label}
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 );
               })}
             </div>
+            <BottomNavbar activeTab={"community"} />
           </div>
         </div>
       </main>

@@ -11,6 +11,9 @@ import Home from "./pages/home";
 import Lengua from "./pages/lengua";
 import Onboarding from "./pages/onboarding";
 
+import Messages from "./pages/messages";
+import Profile from "./pages/profile";
+
 import AuthProvider from "./components/AuthProvider";
 
 function App() {
@@ -36,6 +39,22 @@ function App() {
           element={
             <AuthProvider>
               <Onboarding />
+            </AuthProvider>
+          }
+        />
+        <Route
+          path="/messages"
+          element={
+            <AuthProvider>
+              <Messages />
+            </AuthProvider>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <AuthProvider>
+              <Profile />
             </AuthProvider>
           }
         />

@@ -26,17 +26,24 @@ export default function Onboarding() {
       if (data?.nationality && data?.languages.length > 1) {
         let formValid = true;
         // make sure that all languages have a proficiency and language selected
-        languages.forEach((language) => {
-          if (language.language === "") {
-            alert("Please select a language for each language field.");
-            formValid = false;
-          }
-          else if (language.proficiency === "") {
-            alert("Please select a proficiency for each language field.");
-            formValid = false;
-          }
-        });
+        if (languages.length < 2 || languages.length > 10) {
+          return res.status(400).json({
+            message: "Please select between 2 and 10 languages (one should be your native languages and the others should be languages you are learning).",
+          });
+        }
+
+        if (languages.length < 2 || languages.length > 10) {
+          alert("Please select between 2 and 10 languages (one should be your native languages and the others should be languages you are learning).");
+          formValid = false;
+        }
         
+        if (data?.interests) {
+          if (data.interests.length > 10) {
+            alert("Please select a maximum of 10 interests.");
+            formValid = false;
+          }
+        }
+                
         if (!formValid) return;
 
         // if code reaches here then form valid
