@@ -225,10 +225,11 @@ app.get("/api/search", authenticateToken, async (req, res) => {
   }
 });
 
-function isValidRequestor(requestingUser) {  // function to make sure the req.user has onboarded first
+function isValidRequestor(requestingUser) {
+  // function to make sure the req.user has onboarded first
   return (
     requestingUser?.languages &&
-    requestingUser?.languages.length > 1 && 
+    requestingUser?.languages.length > 1 &&
     requestingUser?.nationality
   );
 }
@@ -276,13 +277,12 @@ app.post("/api/conversation", authenticateToken, async (req, res) => {
     const conversation = new Conversation({
       users: [req.user._id, recipientId],
     });
-    
+
     const savedConversation = await conversation.save();
     if (!savedConversation) {
       return res.status(500).json({ message: "An unexpected error occured" });
     }
     return res.status(200).json(savedConversation);
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });
@@ -293,7 +293,9 @@ app.put("/api/message", authenticateToken, async (req, res) => {
   try {
     const { conversationId, message } = req.body;
     if (!conversationId || !message) {
-      return res.status(400).json({ message: "Please provide conversationId and message" });
+      return res
+        .status(400)
+        .json({ message: "Please provide conversationId and message" });
     }
 
     const conversation = await Conversation.findById(conversationId);
@@ -307,7 +309,9 @@ app.put("/api/message", authenticateToken, async (req, res) => {
 
     const newMessage = {
       from: req.user._id,
-      to: conversation.users.find((id) => id.toString() !== req.user._id.toString()),  // finds the other user who isn't the req.user
+      to: conversation.users.find(
+        (id) => id.toString() !== req.user._id.toString()
+      ), // finds the other user who isn't the req.user
       content: message,
     };
 
@@ -317,8 +321,6 @@ app.put("/api/message", authenticateToken, async (req, res) => {
       return res.status(500).json({ message: "An unexpected error occured" });
     }
     return res.status(200).json(savedConversation);
-
-
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Server Error" });
@@ -327,7 +329,7 @@ app.put("/api/message", authenticateToken, async (req, res) => {
 
 app.get("/api/conversation", authenticateToken, async (req, res) => {
   try {
-    const {conversationId} = req.query;
+    const { conversationId } = req.query;
     if (!conversationId) {
       return res.status(400).json({ message: "Please provide conversationId" });
     }
@@ -342,8 +344,7 @@ app.get("/api/conversation", authenticateToken, async (req, res) => {
     }
 
     return res.status(200).json(conversation);
-  }
-  catch (err) {
+  } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Server Error" });
   }
@@ -353,6 +354,29 @@ app.get("/api/conversations", authenticateToken, async (req, res) => {
   try {
     const conversations = await Conversation.find({ users: req.user._id });
     return res.status(200).json(conversations);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+app.post("/api/users", authenticateToken, async (req, res) => {
+  try {
+    const {ids} = req.body;
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: "Please provide and array of ids" });
+    }
+
+    console.log(ids);
+
+    const users = await User.find({ _id: { $in: ids } }).select(
+      "-password"
+    );
+    if (users.length > 0) {
+      return res.status(200).json(users);
+    }
+    return res.status(404).json({ message: "Users not found" });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Server Error" });

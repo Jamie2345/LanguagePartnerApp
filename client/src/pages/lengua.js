@@ -83,6 +83,34 @@ export default function Lengua() {
     }
   }
 
+  async function startConversation(recipientId) {
+    console.log(recipientId);
+    try {
+      const response = await axiosInstance.post("/api/conversation", {
+        recipientId,
+      });
+
+      if (response.status === 200) {
+        const conversationId = response.data._id;
+        window.location.href = `/messages/${conversationId}`;
+      }
+      else {
+        alert("Error creating this conversation");
+      }
+    } catch (err) {
+      console.log(err);
+      if (
+        err?.response?.status === 400 ||
+        err?.response?.status === 401 ||
+        err?.response?.status === 404
+      ) {
+        alert(err.response.data.message);
+      } else {
+        alert("Error starting conversation");
+      }
+    }
+  }
+
   useEffect(() => {
     if (validUser) {
       searchForUsers();
@@ -103,7 +131,10 @@ export default function Lengua() {
                 ref={filterInputRef}
               >
                 <h2 className="text-base-content text-2xl font-semibold">
-                  Search for other users
+                  Search for other users{" "}
+                  <span className="text-sm text-base-content/60">
+                    (click on a user to start a conversation)
+                  </span>
                 </h2>
                 <div className="flex items-center">
                   <div className="min-w-48 mr-3">
@@ -152,7 +183,12 @@ export default function Lengua() {
             >
               {searchUsers.map((searchedUser) => {
                 return (
-                  <div className="py-12 px-8 border-[1px] border-secondary rounded-xl shadow-xl flex items-center">
+                  <div
+                    className="py-12 px-8 border-[1px] border-secondary rounded-xl shadow-xl flex items-center cursor-pointer"
+                    onClick={() => {
+                      startConversation(searchedUser?._id);
+                    }}
+                  >
                     <div className="mr-12">
                       <img
                         src="/images/defaultuser.jpg"

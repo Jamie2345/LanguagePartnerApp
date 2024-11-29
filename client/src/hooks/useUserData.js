@@ -4,6 +4,7 @@ import axiosInstance from "../api/axiosInstance";
 const useUserData = () => {
   const [validUser, setValidUser] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const getUserData = async () => {
@@ -13,6 +14,7 @@ const useUserData = () => {
 
         if (user && user.nationality && user.languages.length > 1) {
           setValidUser(true); // true as the data is valid!
+          setUser(user);
         } else {
           console.log("fail");
           setValidUser(false);
@@ -27,7 +29,7 @@ const useUserData = () => {
     getUserData();
   }, []);
 
-  return { validUser, loading };
+  return { user, validUser, loading };
 };
 
 export default useUserData;
