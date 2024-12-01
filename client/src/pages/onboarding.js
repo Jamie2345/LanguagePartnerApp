@@ -9,6 +9,7 @@ import { MdDelete } from "react-icons/md";
 import axiosInstance from "../api/axiosInstance";
 
 import "../css/onboarding.css";
+import ToggleThemeTopRight from "../components/ToggleThemeTopRight";
 
 export default function Onboarding() {
   const [nationality, setNationality] = useState("");
@@ -28,22 +29,25 @@ export default function Onboarding() {
         // make sure that all languages have a proficiency and language selected
         if (languages.length < 2 || languages.length > 10) {
           return res.status(400).json({
-            message: "Please select between 2 and 10 languages (one should be your native languages and the others should be languages you are learning).",
+            message:
+              "Please select between 2 and 10 languages (one should be your native languages and the others should be languages you are learning).",
           });
         }
 
         if (languages.length < 2 || languages.length > 10) {
-          alert("Please select between 2 and 10 languages (one should be your native languages and the others should be languages you are learning).");
+          alert(
+            "Please select between 2 and 10 languages (one should be your native languages and the others should be languages you are learning)."
+          );
           formValid = false;
         }
-        
+
         if (data?.interests) {
           if (data.interests.length > 10) {
             alert("Please select a maximum of 10 interests.");
             formValid = false;
           }
         }
-                
+
         if (!formValid) return;
 
         // if code reaches here then form valid
@@ -52,21 +56,20 @@ export default function Onboarding() {
             "Content-Type": "application/json",
           },
         });
-    
+
         if (response.status === 200) {
           window.location.href = "/lengua";
         } else {
           alert(response.data.message);
         }
-      }
-      else if (!data?.nationality) {
+      } else if (!data?.nationality) {
         alert("Please enter your nationality.");
+      } else {
+        alert(
+          "Please enter your native language and at least one other language you want to learn."
+        );
       }
-      else {
-        alert("Please enter your native language and at least one other language you want to learn.");
-      }
-    }
-    catch (err) {
+    } catch (err) {
       alert("An unexpected error occured please try again.");
     }
   }
@@ -87,7 +90,7 @@ export default function Onboarding() {
             <div className="w-full">
               <p className="text-primary-content mb-2">Where are you from?</p>
               <ReactFlagsSelect
-                className="text-base-content"
+                className="text-base-content react-flags-custom"
                 selectButtonClassName="country-btn"
                 searchable={true}
                 selected={nationality}

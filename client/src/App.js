@@ -12,6 +12,7 @@ import Lengua from "./pages/lengua";
 import Onboarding from "./pages/onboarding";
 
 import Messages from "./pages/messages";
+import MessagePage from "./pages/message";
 import Profile from "./pages/profile";
 
 import AuthProvider from "./components/AuthProvider";
@@ -47,6 +48,14 @@ function App() {
           element={
             <AuthProvider>
               <Messages />
+            </AuthProvider>
+          }
+        />
+        <Route
+          path="/messages/:conversationId"
+          element={
+            <AuthProvider>
+              <MessagePage />
             </AuthProvider>
           }
         />

@@ -1,6 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 
+import ToggleThemeTopRight from "../components/ToggleThemeTopRight";
+import { To } from "react-flags-select";
+
 export default function Login() {
   const [edittingUsername, setEdittingUsername] = useState(false);
   const [username, setUsername] = useState("");
@@ -42,6 +45,7 @@ export default function Login() {
   return (
     <main data-theme="light">
       <div className="flex w-full min-h-screen items-center justify-center bg-gradient-to-br from-primary to-secondary/30">
+      <ToggleThemeTopRight />
         <div className="my-12 mx-6 w-full flex flex-col px-8 py-12 rounded-2xl shadow-xl bg-base-200 max-w-[800px]">
           <div className="py-4 border-b-[1px] border-primary/20 w-full text-left">
             <h2 className="text-4xl font-semibold text-base-content mb-2">

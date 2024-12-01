@@ -4,7 +4,7 @@ import { CgProfile } from "react-icons/cg";
 
 export default function BottomNavbar({ activeTab }) {
   return (
-    <div className="w-full flex items-center justify-center absolute bottom-12">
+    <div className="w-full flex items-center justify-center absolute bottom-8">
       <div className="flex items-center gap-6">
         <a href="/messages">
           <div className="flex flex-col items-center gap-1">

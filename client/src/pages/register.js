@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import ToggleThemeTopRight from "../components/ToggleThemeTopRight";
 
 export default function Register() {
   const [edittingUsername, setEdittingUsername] = useState(false);
@@ -25,14 +26,13 @@ export default function Register() {
       const data = await response.json();
       console.log(data);
       window.location.href = "/login";
-    }
-    else if (response.status == 409) {
+    } else if (response.status == 409) {
       alert("This username is already in use. Please try another.");
-    }
-    else if (response.status == 400) {
-      alert("Please ensure you have completed both username and password fields.");
-    }
-    else {
+    } else if (response.status == 400) {
+      alert(
+        "Please ensure you have completed both username and password fields."
+      );
+    } else {
       alert("Unknown error please try again.");
     }
   };
@@ -40,6 +40,7 @@ export default function Register() {
   return (
     <main data-theme="light">
       <div className="flex w-full min-h-screen items-center justify-center bg-gradient-to-br from-primary to-secondary/30">
+        <ToggleThemeTopRight />
         <div className="my-12 mx-6 w-full flex flex-col px-8 py-12 rounded-2xl shadow-xl bg-base-200 max-w-[800px]">
           <div className="py-4 border-b-[1px] border-primary/20 w-full text-left">
             <h2 className="text-4xl font-semibold text-base-content mb-2">
