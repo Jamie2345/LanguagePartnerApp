@@ -23,4 +23,6 @@ router.get("/conversation", authenticateToken, getConversation);
 router.get("/conversations", authenticateToken, getConversations);
 router.post("/users", authenticateToken, getUsers);
 
+router.put("/profile", authenticateToken, onboarding); // update profile using the onboarding function as they both do the same thing.
+
 export default router;

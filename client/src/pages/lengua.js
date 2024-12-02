@@ -69,6 +69,7 @@ export default function Lengua() {
 
       if (data) {
         setSearchUsers(data);
+        console.log(data);
         if (data.length === 0) {
           alert("No users found with the given criteria.");
         }
@@ -93,8 +94,7 @@ export default function Lengua() {
       if (response.status === 200) {
         const conversationId = response.data._id;
         window.location.href = `/messages/${conversationId}`;
-      }
-      else {
+      } else {
         alert("Error creating this conversation");
       }
     } catch (err) {
@@ -185,6 +185,7 @@ export default function Lengua() {
                 return (
                   <div
                     className="py-12 px-8 border-[1px] border-secondary rounded-xl shadow-xl flex items-center cursor-pointer"
+                    key={searchedUser?._id}
                     onClick={() => {
                       startConversation(searchedUser?._id);
                     }}
@@ -196,10 +197,7 @@ export default function Lengua() {
                         className="w-32 h-auto"
                       />
                     </div>
-                    <div
-                      className="w-full flex flex-col"
-                      key={searchedUser?._id}
-                    >
+                    <div className="w-full flex flex-col">
                       <div className="flex">
                         <h2 className="text-2xl font-semibold mr-4">
                           {searchedUser?.username}
