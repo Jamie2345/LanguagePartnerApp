@@ -146,7 +146,35 @@ export default function Lengua() {
                       name="language"
                       isClearable={true}
                       options={LanguageOptions}
-                      onChange={(e) => {(e === null) ? setLanguage("") : setLanguage(e.value)}}
+                      onChange={(e) => {
+                        e === null ? setLanguage("") : setLanguage(e.value);
+                      }}
+                      theme={(theme) => ({
+                        ...theme,
+                        colors: {
+                          ...theme.colors,
+                          //after select dropdown option
+                          primary50: "oklch(var(--pc))",
+                          //Border and Background dropdown color
+                          primary: "oklch(var(--p) / 0.7)",
+                          //Background hover dropdown color
+                          primary25: "oklch(var(--b3))",
+                          //Background color
+                          neutral0: "oklch(var(--b1))",
+                          //Border before select
+                          neutral20: "oklch(var(--bc) / 0.3)",
+                          //Hover border
+                          neutral30: "oklch(var(--bc) / 0.5)",
+                          //No options color
+                          neutral40: "oklch(var(--bc / 0.6))",
+                          //Select color
+                          neutral50: "oklch(var(--bc) / 0.6)",
+                          //arrow icon when click select
+                          neutral60: "oklch(var(--bc) / 0.5)",
+                          //Text color
+                          neutral80: "oklch(var(--bc))",
+                        },
+                      })}
                     />
                   </div>
                   <div className="min-w-64 mr-3">
@@ -157,7 +185,37 @@ export default function Lengua() {
                       name="language"
                       isClearable={true}
                       options={ProficiencyOptions}
-                      onChange={(e) => {(e === null) ? setProficiency("") : setProficiency(e.value)}}
+                      onChange={(e) => {
+                        e === null
+                          ? setProficiency("")
+                          : setProficiency(e.value);
+                      }}
+                      theme={(theme) => ({
+                        ...theme,
+                        colors: {
+                          ...theme.colors,
+                          //after select dropdown option
+                          primary50: "oklch(var(--pc))",
+                          //Border and Background dropdown color
+                          primary: "oklch(var(--p) / 0.7)",
+                          //Background hover dropdown color
+                          primary25: "oklch(var(--b3))",
+                          //Background color
+                          neutral0: "oklch(var(--b1))",
+                          //Border before select
+                          neutral20: "oklch(var(--bc) / 0.3)",
+                          //Hover border
+                          neutral30: "oklch(var(--bc) / 0.5)",
+                          //No options color
+                          neutral40: "oklch(var(--bc / 0.6))",
+                          //Select color
+                          neutral50: "oklch(var(--bc) / 0.6)",
+                          //arrow icon when click select
+                          neutral60: "oklch(var(--bc) / 0.5)",
+                          //Text color
+                          neutral80: "oklch(var(--bc))",
+                        },
+                      })}
                     />
                   </div>
                   <div className="min-w-64 w-full">
@@ -167,7 +225,39 @@ export default function Lengua() {
                       isMulti
                       isClearable={true}
                       options={interestOptions}
-                      onChange={(e) => {(e === null) ? setInterests([]) : setInterests(e.map((i) => i.value))}}
+                      onChange={(e) => {
+                        e === null
+                          ? setInterests([])
+                          : setInterests(e.map((i) => i.value));
+                      }}
+                      theme={(theme) => ({
+                        ...theme,
+                        colors: {
+                          ...theme.colors,
+                          //after select dropdown option
+                          primary50: "oklch(var(--pc))",
+                          //Border and Background dropdown color
+                          primary: "oklch(var(--p) / 0.7)",
+                          //Background hover dropdown color
+                          primary25: "oklch(var(--b3))",
+                          //Background color
+                          neutral0: "oklch(var(--b1))",
+                          //Border before select
+                          neutral20: "oklch(var(--bc) / 0.3)",
+                          //Hover border
+                          neutral30: "oklch(var(--bc) / 0.5)",
+                          //No options color
+                          neutral40: "oklch(var(--bc / 0.6))",
+                          //Select color
+                          neutral50: "oklch(var(--bc) / 0.6)",
+                          //arrow icon when click select
+                          neutral60: "oklch(var(--bc) / 0.5)",
+                          //Text color
+                          neutral80: "oklch(var(--bc))",
+
+                          neutral10: "oklch(var(--b2))"
+                        },
+                      })}
                     />
                   </div>
                 </div>

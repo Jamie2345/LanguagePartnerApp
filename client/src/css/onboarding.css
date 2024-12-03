@@ -1,8 +1,0 @@
-.country-btn {
-  background-color: oklch(var(--b1));
-  color: oklch(var(--bc));
-}
-
-.react-flags-custom input {
-  background-color: oklch(var(--b1));
-}

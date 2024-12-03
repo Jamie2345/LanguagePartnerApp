@@ -15,6 +15,8 @@ import Select from "react-select";
 
 import axiosInstance from "../api/axiosInstance";
 
+import "../css/reactflagsselect.css";
+
 export default function Profile() {
   const { user, validUser, loading } = useUserData();
   const [nationalityEdit, setNationalityEdit] = useState(false);
@@ -109,7 +111,7 @@ export default function Profile() {
         });
 
         if (response.status === 200) {
-          alert("Profile updated successfully.");	
+          alert("Profile updated successfully.");
         } else {
           alert(response.data.message);
         }
@@ -156,8 +158,6 @@ export default function Profile() {
                       Where are you from?
                     </p>
                     <ReactFlagsSelect
-                      className="text-base-content react-flags-custom"
-                      selectButtonClassName="country-btn"
                       searchable={true}
                       selected={nationalityEdit}
                       onSelect={(code) => setNationalityEdit(code)}
@@ -195,6 +195,34 @@ export default function Profile() {
                                       )
                                     );
                                   }}
+                                  theme={(theme) => ({
+                                    ...theme,
+                                    colors: {
+                                      ...theme.colors,
+                                      //after select dropdown option
+                                      primary50: "oklch(var(--pc))",
+                                      //Border and Background dropdown color
+                                      primary: "oklch(var(--p) / 0.7)",
+                                      //Background hover dropdown color
+                                      primary25: "oklch(var(--b3))",
+                                      //Background color
+                                      neutral0: "oklch(var(--b1))",
+                                      //Border before select
+                                      neutral20: "oklch(var(--bc) / 0.3)",
+                                      //Hover border
+                                      neutral30: "oklch(var(--bc) / 0.5)",
+                                      //No options color
+                                      neutral40: "oklch(var(--bc / 0.6))",
+                                      //Select color
+                                      neutral50: "oklch(var(--bc) / 0.6)",
+                                      //arrow icon when click select
+                                      neutral60: "oklch(var(--bc) / 0.5)",
+                                      //Text color
+                                      neutral80: "oklch(var(--bc))",
+
+                                      neutral10: "oklch(var(--b2))",
+                                    },
+                                  })}
                                 />
                               </div>
                               <div className="min-w-64 mr-6">
@@ -216,6 +244,34 @@ export default function Profile() {
                                       )
                                     );
                                   }}
+                                  theme={(theme) => ({
+                                    ...theme,
+                                    colors: {
+                                      ...theme.colors,
+                                      //after select dropdown option
+                                      primary50: "oklch(var(--pc))",
+                                      //Border and Background dropdown color
+                                      primary: "oklch(var(--p) / 0.7)",
+                                      //Background hover dropdown color
+                                      primary25: "oklch(var(--b3))",
+                                      //Background color
+                                      neutral0: "oklch(var(--b1))",
+                                      //Border before select
+                                      neutral20: "oklch(var(--bc) / 0.3)",
+                                      //Hover border
+                                      neutral30: "oklch(var(--bc) / 0.5)",
+                                      //No options color
+                                      neutral40: "oklch(var(--bc / 0.6))",
+                                      //Select color
+                                      neutral50: "oklch(var(--bc) / 0.6)",
+                                      //arrow icon when click select
+                                      neutral60: "oklch(var(--bc) / 0.5)",
+                                      //Text color
+                                      neutral80: "oklch(var(--bc))",
+
+                                      neutral10: "oklch(var(--b2))",
+                                    },
+                                  })}
                                 />
                               </div>
                               <button className="p-1">
@@ -266,6 +322,34 @@ export default function Profile() {
                           console.log(interests);
                           setInterestsEdit(interests);
                         }}
+                        theme={(theme) => ({
+                          ...theme,
+                          colors: {
+                            ...theme.colors,
+                            //after select dropdown option
+                            primary50: "oklch(var(--pc))",
+                            //Border and Background dropdown color
+                            primary: "oklch(var(--p) / 0.7)",
+                            //Background hover dropdown color
+                            primary25: "oklch(var(--b3))",
+                            //Background color
+                            neutral0: "oklch(var(--b1))",
+                            //Border before select
+                            neutral20: "oklch(var(--bc) / 0.3)",
+                            //Hover border
+                            neutral30: "oklch(var(--bc) / 0.5)",
+                            //No options color
+                            neutral40: "oklch(var(--bc / 0.6))",
+                            //Select color
+                            neutral50: "oklch(var(--bc) / 0.6)",
+                            //arrow icon when click select
+                            neutral60: "oklch(var(--bc) / 0.5)",
+                            //Text color
+                            neutral80: "oklch(var(--bc))",
+
+                            neutral10: "oklch(var(--b2))",
+                          },
+                        })}
                       />
                     </div>
                   </div>

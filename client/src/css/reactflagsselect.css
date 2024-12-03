@@ -1,0 +1,50 @@
+/* css code for the button */
+.ReactFlagsSelect-module_selectBtn__19wW7 {
+  background-color: oklch(var(--b1));
+  transition: all;
+  transition-duration: 200ms;
+  border-color: oklch(var(--bc) / 0.3);
+  color: oklch(var(--bc) / 0.5);
+}
+.ReactFlagsSelect-module_selectBtn__19wW7 .ReactFlagsSelect-module_selectValue__152eS {
+  color: oklch(var(--bc) / 0.6); /* css code for the to make placeholder text slightly opaque */
+}
+
+.ReactFlagsSelect-module_selectBtn__19wW7:hover {
+  border-color: oklch(var(--bc) / 0.4);
+}
+.ReactFlagsSelect-module_selectBtn__19wW7:focus {
+  border-color: oklch(var(--bc) / 0.5);
+}
+
+/* css code for the select options */
+.ReactFlagsSelect-module_selectValue__152eS {
+  color: oklch(var(--bc));
+}
+
+.ReactFlagsSelect-module_selectOptionValue__vS99-,
+.ReactFlagsSelect-module_selectFlag__2q5gC,
+.ReactFlagsSelect-module_label__27pw9 {
+  color: oklch(var(--bc));
+}
+
+/* css code for the search input */
+.ReactFlagsSelect-module_filterBox__3m8EU {
+  background-color: oklch(var(--b1));
+}
+.ReactFlagsSelect-module_filterBox__3m8EU input {
+  background-color: oklch(var(--b1));
+}
+
+/* css code for the search box results */
+.ReactFlagsSelect-module_selectOptions__3LNBJ,
+.ReactFlagsSelect-module_selectOptionsWithSearch__1W03w,
+.ReactFlagsSelect-module_fullWidthOptions__1XeR6 {
+  background-color: oklch(var(--b1));
+  border-color: oklch(var(--bc) / 0.5);
+}
+
+.ReactFlagsSelect-module_selectOption__3pcgW:hover,
+.ReactFlagsSelect-module_selectOptionWithlabel__2GpmM:hover {
+  background-color: oklch(var(--b2));
+}

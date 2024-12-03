@@ -8,7 +8,7 @@ import { MdDelete } from "react-icons/md";
 
 import axiosInstance from "../api/axiosInstance";
 
-import "../css/onboarding.css";
+import "../css/reactflagsselect.css";
 import ToggleThemeTopRight from "../components/ToggleThemeTopRight";
 
 export default function Onboarding() {
@@ -77,6 +77,7 @@ export default function Onboarding() {
   return (
     <main data-theme="light">
       <div className="w-full min-h-screen h-full flex items-center justify-center bg-base-200">
+        <ToggleThemeTopRight />
         <div className="flex flex-col py-12 px-8 m-8 rounded-2xl shadow-2xl items-center bg-gradient-to-br from-primary to-primary/50 shadow-base-300 w-full max-w-[730px]">
           <div className="flex text-center flex-col mb-12">
             <h1 className="text-4xl font-bold text-primary-content">
@@ -90,8 +91,6 @@ export default function Onboarding() {
             <div className="w-full">
               <p className="text-primary-content mb-2">Where are you from?</p>
               <ReactFlagsSelect
-                className="text-base-content react-flags-custom"
-                selectButtonClassName="country-btn"
                 searchable={true}
                 selected={nationality}
                 onSelect={(code) => setNationality(code)}
@@ -128,6 +127,34 @@ export default function Onboarding() {
                                 )
                               );
                             }}
+                            theme={(theme) => ({
+                              ...theme,
+                              colors: {
+                                ...theme.colors,
+                                //after select dropdown option
+                                primary50: "oklch(var(--pc))",
+                                //Border and Background dropdown color
+                                primary: "oklch(var(--p) / 0.7)",
+                                //Background hover dropdown color
+                                primary25: "oklch(var(--b3))",
+                                //Background color
+                                neutral0: "oklch(var(--b1))",
+                                //Border before select
+                                neutral20: "oklch(var(--bc) / 0.3)",
+                                //Hover border
+                                neutral30: "oklch(var(--bc) / 0.5)",
+                                //No options color
+                                neutral40: "oklch(var(--bc / 0.6))",
+                                //Select color
+                                neutral50: "oklch(var(--bc) / 0.6)",
+                                //arrow icon when click select
+                                neutral60: "oklch(var(--bc) / 0.5)",
+                                //Text color
+                                neutral80: "oklch(var(--bc))",
+
+                                neutral10: "oklch(var(--b2))",
+                              },
+                            })}
                           />
                         </div>
                         <div className="min-w-64 mr-6">
@@ -149,6 +176,34 @@ export default function Onboarding() {
                                 )
                               );
                             }}
+                            theme={(theme) => ({
+                              ...theme,
+                              colors: {
+                                ...theme.colors,
+                                //after select dropdown option
+                                primary50: "oklch(var(--pc))",
+                                //Border and Background dropdown color
+                                primary: "oklch(var(--p) / 0.7)",
+                                //Background hover dropdown color
+                                primary25: "oklch(var(--b3))",
+                                //Background color
+                                neutral0: "oklch(var(--b1))",
+                                //Border before select
+                                neutral20: "oklch(var(--bc) / 0.3)",
+                                //Hover border
+                                neutral30: "oklch(var(--bc) / 0.5)",
+                                //No options color
+                                neutral40: "oklch(var(--bc / 0.6))",
+                                //Select color
+                                neutral50: "oklch(var(--bc) / 0.6)",
+                                //arrow icon when click select
+                                neutral60: "oklch(var(--bc) / 0.5)",
+                                //Text color
+                                neutral80: "oklch(var(--bc))",
+
+                                neutral10: "oklch(var(--b2))",
+                              },
+                            })}
                           />
                         </div>
                         <button className="p-1">
@@ -197,6 +252,34 @@ export default function Onboarding() {
                     console.log(interests);
                     setInterests(interests);
                   }}
+                  theme={(theme) => ({
+                    ...theme,
+                    colors: {
+                      ...theme.colors,
+                      //after select dropdown option
+                      primary50: "oklch(var(--pc))",
+                      //Border and Background dropdown color
+                      primary: "oklch(var(--p) / 0.7)",
+                      //Background hover dropdown color
+                      primary25: "oklch(var(--b3))",
+                      //Background color
+                      neutral0: "oklch(var(--b1))",
+                      //Border before select
+                      neutral20: "oklch(var(--bc) / 0.3)",
+                      //Hover border
+                      neutral30: "oklch(var(--bc) / 0.5)",
+                      //No options color
+                      neutral40: "oklch(var(--bc / 0.6))",
+                      //Select color
+                      neutral50: "oklch(var(--bc) / 0.6)",
+                      //arrow icon when click select
+                      neutral60: "oklch(var(--bc) / 0.5)",
+                      //Text color
+                      neutral80: "oklch(var(--bc))",
+
+                      neutral10: "oklch(var(--b2))",
+                    },
+                  })}
                 />
               </div>
             </div>
