@@ -25,8 +25,8 @@ export const fetchUser = async (req, res) => {
 
       // find user and retrieve only the user data without the rest of the mongodb extra data.
       const foundUser = await User.findById(id);
-      user = foundUser.toObject();  // set the user variable to be only the relevant user data.
-      
+      user = foundUser.toObject(); // set the user variable to be only the relevant user data.
+
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
@@ -181,16 +181,17 @@ export const search = async (req, res) => {
           "proficiency.value": proficiency,
         },
       };
-    } else {
-      // default to showing similar users.
-      const userLanguages = req?.user?.languages;
-      const languageValues = userLanguages.map((lang) => lang.language.value);
-
-      console.log("defaulted to showing similar users");
-      console.log("Searching for users with languages:", languageValues);
-
+    } else if (language) {
       query["languages"] = {
-        $elemMatch: { "language.value": { $in: languageValues } },
+        $elemMatch: {
+          "language.value": language,
+        },
+      };
+    } else if (proficiency) {
+      query["languages"] = {
+        $elemMatch: {
+          "proficiency.value": proficiency,
+        },
       };
     }
 
@@ -200,6 +201,19 @@ export const search = async (req, res) => {
         : interests.split(",");
       query["interests"] = {
         $elemMatch: { value: { $in: interestsArray } },
+      };
+    }
+
+    if (!language && !proficiency && (!interests || interests.length <= 0)) {
+      // default to showing similar users.
+      const userLanguages = req?.user?.languages;
+      const languageValues = userLanguages.map((lang) => lang.language.value);
+
+      console.log("defaulted to showing similar users");
+      console.log("Searching for users with languages:", languageValues);
+
+      query["languages"] = {
+        $elemMatch: { "language.value": { $in: languageValues } },
       };
     }
 

@@ -31,10 +31,14 @@ export default function MessagePage() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   async function fetchConversationMessages() {
+    let currentUser = user;
     // Check if user data is available
-    if (!user || !user._id) {
+    if (!currentUser || !currentUser._id) {
       console.error("User data is not available. Unable to fetch messages.");
-      return; // Early return if user is not available
+      const { foundUser, foundValidUser, foundLoading } = useUserData();
+      console.log("me")
+      console.log(foundUser)
+      return;
     }
 
     try {

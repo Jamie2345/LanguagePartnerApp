@@ -59,7 +59,7 @@ export default function Lengua() {
   async function searchForUsers() {
     const interestsString = interests ? interests.join(",") : "";
     const url =
-      language && proficiency
+      language || proficiency || interestsString
         ? `/api/search?language=${language}&proficiency=${proficiency}&interests=${interestsString}`
         : "/api/search";
 
