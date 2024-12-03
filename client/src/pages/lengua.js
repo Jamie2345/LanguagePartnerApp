@@ -144,8 +144,9 @@ export default function Lengua() {
                       placeholder="Select Language"
                       isSearchable={true}
                       name="language"
+                      isClearable={true}
                       options={LanguageOptions}
-                      onChange={(e) => setLanguage(e.value)}
+                      onChange={(e) => {(e === null) ? setLanguage("") : setLanguage(e.value)}}
                     />
                   </div>
                   <div className="min-w-64 mr-3">
@@ -154,8 +155,9 @@ export default function Lengua() {
                       classNamePrefix="select"
                       placeholder="Select Proficiency"
                       name="language"
+                      isClearable={true}
                       options={ProficiencyOptions}
-                      onChange={(e) => setProficiency(e.value)}
+                      onChange={(e) => {(e === null) ? setProficiency("") : setProficiency(e.value)}}
                     />
                   </div>
                   <div className="min-w-64 w-full">
@@ -163,8 +165,9 @@ export default function Lengua() {
                       closeMenuOnSelect={false}
                       placeholder="Select Interests / Hobbies"
                       isMulti
+                      isClearable={true}
                       options={interestOptions}
-                      onChange={(e) => setInterests(e.map((i) => i.value))}
+                      onChange={(e) => {(e === null) ? setInterests([]) : setInterests(e.map((i) => i.value))}}
                     />
                   </div>
                 </div>
